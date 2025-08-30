@@ -36,4 +36,4 @@ def formatDate():
 class ProductPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('id','price','name', 'qty', 'cat')
+        fields = ('price','name', 'qty', 'cat')
