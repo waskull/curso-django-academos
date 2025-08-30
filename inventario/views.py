@@ -68,3 +68,39 @@ class ProductDetailView(APIView):
             )
         product.delete()
         return Response({"message":"El producto fue eliminado"})
+    
+class CategoryDetailView(APIView):
+    def get_object(self, pk):
+        try:
+            return Product.objects.get(pk=pk)
+        except Product.DoesNotExist:
+            return None
+
+    def get(self, request, pk):
+        product = self.get_object(pk)
+        if product is None:
+            return Response(
+                {"error": "Categoria no encontrada"}, status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = CategorySerializer(product)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        product = self.get_object(pk)
+        if product is None:
+            return Response(
+                {"error": "Categoria no encontrada"}, status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = CategoryPostSerializer(product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, pk):
+        product = self.get_object(pk)
+        if product is None:
+            return Response(
+                {"error": "Categoria no encontrada"}, status=status.HTTP_404_NOT_FOUND
+            )
+        product.delete()
+        return Response({"message":"La categoria fue eliminada"})
