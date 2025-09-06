@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer, ProductPostSerializer, CategoryPostSerializer
 # Create your views here.
@@ -12,8 +13,10 @@ class ProductList(APIView):
         name = request.query_params.get('name', None)
         if name:
             products = products.filter(name__icontains=name)
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(products, request, view=self)
+        serializer = ProductSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
     def post(self, request):
         serializer = ProductPostSerializer(data=request.data)
         if serializer.is_valid():
