@@ -4,10 +4,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from .models import Product, Category
+#from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 from .serializers import ProductSerializer, CategorySerializer, ProductPostSerializer, CategoryPostSerializer
 # Create your views here.
 
 class ProductList(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         products = Product.objects.all()
         name = request.query_params.get('name', None)
@@ -25,6 +28,7 @@ class ProductList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CategoryList(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         cats = Category.objects.all()
         serializer = CategorySerializer(cats, many=True)
