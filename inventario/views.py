@@ -49,11 +49,13 @@ class ProductDetailView(APIView):
 
     def get(self, request, pk):
         product = self.get_object(pk)
+        print(dir(product))
         if product is None:
             return Response(
                 {"error": "Producto no encontrado"}, status=status.HTTP_404_NOT_FOUND
             )
         serializer = ProductSerializer(product)
+        #print(dir(serializer))
         return Response(serializer.data)
 
     def put(self, request, pk):
