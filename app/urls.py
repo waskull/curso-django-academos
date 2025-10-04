@@ -15,7 +15,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path
+from chatbot.views import ChatbotView,ConversationHistoryView, ConversationDetailView
 from inventario.views import ProductList, CategoryList, ProductDetailView, CategoryDetailView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -24,6 +25,9 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+     path('chat/', ChatbotView.as_view(), name='chatbot'),
+    path('conversations/', ConversationHistoryView.as_view(), name='conversation-history'),
+    path('conversations/<int:pk>/', ConversationDetailView.as_view(), name='conversation-detail'),
     path('api/product/', ProductList.as_view(), name="product-list"),
     path('api/product/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
     path('api/category/', CategoryList.as_view(), name="category-list"),
